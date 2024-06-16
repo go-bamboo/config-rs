@@ -13,7 +13,7 @@ pub trait ConsulSource<T>: Debug + Clone
     fn resolve(
         &self,
         format_hint: Option<T>,
-    ) -> Result<ConsulStoredFormat, Box<dyn Error + Send + Sync>>;
+    ) -> Result<ConsulSourceResult, Box<dyn Error + Send + Sync>>;
 }
 
 pub struct ConsulSourceResult {

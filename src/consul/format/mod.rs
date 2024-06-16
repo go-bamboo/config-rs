@@ -7,7 +7,8 @@ use std::collections::HashMap;
 use std::error::Error;
 
 use crate::{
-    config::{Map, Value},
+    map::Map,
+    value::Value,
     consul::ConsulStoredFormat,
     format::Format,
 };

@@ -1,8 +1,13 @@
 use std::error::Error;
 use std::path::PathBuf;
 
-use crate::nacos::{
-    Format, NacosSource, NacosStoredFormat, source::NacosSourceResult,
+use crate::{
+    format::Format,
+    consul::{
+        ConsulStoredFormat,
+        source::ConsulSource,
+        source::ConsulSourceResult,
+    },
 };
 
 /// Describes a file sourced from a file
@@ -18,14 +23,14 @@ impl Remote {
     }
 }
 
-impl<F> NacosSource<F> for Remote
-where
-    F: Format + NacosStoredFormat + 'static,
+impl<F> ConsulSource<F> for Remote
+    where
+        F: Format + ConsulStoredFormat + 'static,
 {
     fn resolve(
         &self,
         format_hint: Option<F>,
-    ) -> Result<NacosSourceResult, Box<dyn Error + Send + Sync>> {
+    ) -> Result<ConsulSourceResult, Box<dyn Error + Send + Sync>> {
         // Find file
         Err("".into())
     }

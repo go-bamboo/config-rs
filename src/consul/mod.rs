@@ -2,13 +2,12 @@ mod format;
 pub mod source;
 
 use std::fmt::Debug;
-use clap::builder::TypedValueParser;
 
-use crate::{ConfigError, Map, Format, Source, Value};
+use crate::{ConfigError, map::Map, format::Format, source::Source, value::Value};
 use url::Url;
 
-pub use self::format::NacosFormat;
-use self::source::NacosSource;
+use self::format::ConsulFormat;
+use self::source::ConsulSource;
 
 /// A configuration source backed up by a nacos.
 ///
@@ -46,7 +45,7 @@ impl<F> Consul<source::remote::Remote, F>
     }
 }
 
-impl Consul<source::remote::Remote, NacosFormat> {
+impl Consul<source::remote::Remote, ConsulFormat> {
     /// Given the basename of a file, will attempt to locate a file by setting its
     /// extension to a registered format.
     pub fn with_name(name: &str) -> Self {
@@ -59,10 +58,10 @@ impl Consul<source::remote::Remote, NacosFormat> {
 }
 
 
-impl<T, F> Nacos<T, F>
+impl<T, F> Consul<T, F>
     where
-        F: NacosStoredFormat + 'static,
-        T: NacosSource<F>,
+        F: ConsulStoredFormat + 'static,
+        T: ConsulSource<F>,
 {
     pub fn format(mut self, format: F) -> Self {
         self.format = Some(format);
@@ -76,10 +75,10 @@ impl<T, F> Nacos<T, F>
     }
 }
 
-impl<T, F> Source for Nacos<T, F>
+impl<T, F> Source for Consul<T, F>
     where
-        F: NacosStoredFormat + Debug + Clone + Send + Sync + 'static,
-        T: Sync + Send + NacosSource<F> + 'static,
+        F: ConsulStoredFormat + Debug + Clone + Send + Sync + 'static,
+        T: Sync + Send + ConsulSource<F> + 'static,
 {
     fn clone_into_box(&self) -> Box<dyn Source + Send + Sync> {
         Box::new((*self).clone())
