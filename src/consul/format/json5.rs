@@ -1,8 +1,8 @@
 use std::error::Error;
 
-use config::format;
-use config::map::Map;
-use config::value::{Value, ValueKind};
+use crate::format;
+use crate::map::Map;
+use crate::value::{Value, ValueKind};
 
 #[derive(serde::Deserialize, Debug)]
 #[serde(untagged)]

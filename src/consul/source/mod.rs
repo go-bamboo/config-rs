@@ -3,26 +3,26 @@ pub mod remote;
 use std::error::Error;
 use std::fmt::Debug;
 
-use crate::{nacos::NacosStoredFormat, format::Format};
+use crate::{consul::ConsulStoredFormat, format::Format};
 
-/// Describes where the nacos is sourced
-pub trait NacosSource<T>: Debug + Clone
+/// Describes where the consul is sourced
+pub trait ConsulSource<T>: Debug + Clone
     where
-        T: Format + NacosStoredFormat,
+        T: Format + ConsulStoredFormat,
 {
     fn resolve(
         &self,
         format_hint: Option<T>,
-    ) -> Result<NacosSourceResult, Box<dyn Error + Send + Sync>>;
+    ) -> Result<ConsulStoredFormat, Box<dyn Error + Send + Sync>>;
 }
 
-pub struct NacosSourceResult {
+pub struct ConsulSourceResult {
     pub(crate) uri: Option<String>,
     pub(crate) content: String,
     pub(crate) format: Box<dyn Format>,
 }
 
-impl NacosSourceResult {
+impl ConsulSourceResult {
     pub fn uri(&self) -> &Option<String> {
         &self.uri
     }

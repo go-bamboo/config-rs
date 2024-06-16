@@ -6,7 +6,7 @@ use lazy_static::lazy_static;
 use std::collections::HashMap;
 use std::error::Error;
 
-use config::{Map, Value, Format};
+use crate::{Map, Value, Format};
 use crate::{nacos::NacosStoredFormat};
 
 #[cfg(feature = "toml")]
@@ -64,22 +64,22 @@ lazy_static! {
         let mut formats: HashMap<NacosFormat, Vec<_>> = HashMap::new();
 
         #[cfg(feature = "toml")]
-        formats.insert(FileFormat::Toml, vec!["toml"]);
+        formats.insert(NacosFormat::Toml, vec!["toml"]);
 
         #[cfg(feature = "json")]
-        formats.insert(FileFormat::Json, vec!["json"]);
+        formats.insert(NacosFormat::Json, vec!["json"]);
 
         #[cfg(feature = "yaml")]
-        formats.insert(FileFormat::Yaml, vec!["yaml", "yml"]);
+        formats.insert(NacosFormat::Yaml, vec!["yaml", "yml"]);
 
         #[cfg(feature = "ini")]
-        formats.insert(FileFormat::Ini, vec!["ini"]);
+        formats.insert(NacosFormat::Ini, vec!["ini"]);
 
         #[cfg(feature = "ron")]
-        formats.insert(FileFormat::Ron, vec!["ron"]);
+        formats.insert(NacosFormat::Ron, vec!["ron"]);
 
         #[cfg(feature = "json5")]
-        formats.insert(FileFormat::Json5, vec!["json5"]);
+        formats.insert(NacosFormat::Json5, vec!["json5"]);
 
         formats
     };
@@ -100,22 +100,22 @@ impl NacosFormat {
     ) -> Result<Map<String, Value>, Box<dyn Error + Send + Sync>> {
         match self {
             #[cfg(feature = "toml")]
-            FileFormat::Toml => toml::parse(uri, text),
+            NacosFormat::Toml => toml::parse(uri, text),
 
             #[cfg(feature = "json")]
-            FileFormat::Json => json::parse(uri, text),
+            NacosFormat::Json => json::parse(uri, text),
 
             #[cfg(feature = "yaml")]
-            FileFormat::Yaml => yaml::parse(uri, text),
+            NacosFormat::Yaml => yaml::parse(uri, text),
 
             #[cfg(feature = "ini")]
-            FileFormat::Ini => ini::parse(uri, text),
+            NacosFormat::Ini => ini::parse(uri, text),
 
             #[cfg(feature = "ron")]
-            FileFormat::Ron => ron::parse(uri, text),
+            NacosFormat::Ron => ron::parse(uri, text),
 
             #[cfg(feature = "json5")]
-            FileFormat::Json5 => json5::parse(uri, text),
+            NacosFormat::Json5 => json5::parse(uri, text),
 
             #[cfg(all(
                 not(feature = "toml"),

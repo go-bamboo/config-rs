@@ -4,7 +4,7 @@ pub mod source;
 use std::fmt::Debug;
 use clap::builder::TypedValueParser;
 
-use config::{ConfigError, Map, Format, Source, Value};
+use crate::{ConfigError, Map, Format, Source, Value};
 use url::Url;
 
 pub use self::format::NacosFormat;

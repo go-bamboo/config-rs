@@ -4,7 +4,7 @@ pub mod source;
 use std::fmt::Debug;
 use clap::builder::TypedValueParser;
 
-use config::{ConfigError, Map, Format, Source, Value};
+use crate::{ConfigError, Map, Format, Source, Value};
 use url::Url;
 
 pub use self::format::NacosFormat;
@@ -15,7 +15,7 @@ use self::source::NacosSource;
 /// It supports optional automatic file format discovery.
 #[derive(Clone, Debug)]
 #[must_use]
-pub struct Nacos<T, F> {
+pub struct Consul<T, F> {
     source: T,
 
     /// Format of file (which dictates what driver to use).
@@ -28,14 +28,14 @@ pub struct Nacos<T, F> {
 /// An extension of [`Format`](crate::Format) trait.
 ///
 /// Associates format with file extensions, therefore linking storage-agnostic notion of format to a file system.
-pub trait NacosStoredFormat: Format {
+pub trait ConsulStoredFormat: Format {
     /// Returns a vector of file extensions, for instance `[yml, yaml]`.
     fn file_extensions(&self) -> &'static [&'static str];
 }
 
-impl<F> Nacos<source::remote::Remote, F>
+impl<F> Consul<source::remote::Remote, F>
     where
-        F: NacosStoredFormat + 'static,
+        F: ConsulStoredFormat + 'static,
 {
     pub fn new(name: &str, format: F) -> Self {
         Self {
@@ -46,7 +46,7 @@ impl<F> Nacos<source::remote::Remote, F>
     }
 }
 
-impl Nacos<source::remote::Remote, NacosFormat> {
+impl Consul<source::remote::Remote, NacosFormat> {
     /// Given the basename of a file, will attempt to locate a file by setting its
     /// extension to a registered format.
     pub fn with_name(name: &str) -> Self {

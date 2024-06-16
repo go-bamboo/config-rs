@@ -3,8 +3,7 @@ pub mod remote;
 use std::error::Error;
 use std::fmt::Debug;
 
-use config::Format;
-use crate::{nacos::NacosStoredFormat};
+use crate::{nacos::NacosStoredFormat, format::Format};
 
 /// Describes where the file is sourced
 pub trait NacosSource<T>: Debug + Clone

@@ -6,8 +6,11 @@ use lazy_static::lazy_static;
 use std::collections::HashMap;
 use std::error::Error;
 
-use config::{Map, Value, Format};
-use crate::{nacos::NacosStoredFormat};
+use crate::{
+    config::{Map, Value},
+    consul::ConsulStoredFormat,
+    format::Format,
+};
 
 #[cfg(feature = "toml")]
 mod toml;
@@ -31,7 +34,7 @@ mod json5;
 ///
 /// Although it is possible to define custom formats using [`Format`] trait it is recommended to use FileFormat if possible.
 #[derive(Debug, Clone, Copy, Eq, PartialEq, Hash)]
-pub enum NacosFormat {
+pub enum ConsulFormat {
     /// TOML (parsed with toml)
     #[cfg(feature = "toml")]
     Toml,
@@ -60,32 +63,32 @@ pub enum NacosFormat {
 lazy_static! {
     #[doc(hidden)]
     // #[allow(unused_mut)] ?
-    pub static ref ALL_EXTENSIONS: HashMap<NacosFormat, Vec<&'static str>> = {
-        let mut formats: HashMap<NacosFormat, Vec<_>> = HashMap::new();
+    pub static ref ALL_EXTENSIONS: HashMap<ConsulFormat, Vec<&'static str>> = {
+        let mut formats: HashMap<ConsulFormat, Vec<_>> = HashMap::new();
 
         #[cfg(feature = "toml")]
-        formats.insert(FileFormat::Toml, vec!["toml"]);
+        formats.insert(ConsulFormat::Toml, vec!["toml"]);
 
         #[cfg(feature = "json")]
-        formats.insert(FileFormat::Json, vec!["json"]);
+        formats.insert(ConsulFormat::Json, vec!["json"]);
 
         #[cfg(feature = "yaml")]
-        formats.insert(FileFormat::Yaml, vec!["yaml", "yml"]);
+        formats.insert(ConsulFormat::Yaml, vec!["yaml", "yml"]);
 
         #[cfg(feature = "ini")]
-        formats.insert(FileFormat::Ini, vec!["ini"]);
+        formats.insert(ConsulFormat::Ini, vec!["ini"]);
 
         #[cfg(feature = "ron")]
-        formats.insert(FileFormat::Ron, vec!["ron"]);
+        formats.insert(ConsulFormat::Ron, vec!["ron"]);
 
         #[cfg(feature = "json5")]
-        formats.insert(FileFormat::Json5, vec!["json5"]);
+        formats.insert(ConsulFormat::Json5, vec!["json5"]);
 
         formats
     };
 }
 
-impl NacosFormat {
+impl ConsulFormat {
     pub(crate) fn extensions(&self) -> &'static [&'static str] {
         // It should not be possible for this to fail
         // A FileFormat would need to be declared without being added to the
@@ -100,22 +103,22 @@ impl NacosFormat {
     ) -> Result<Map<String, Value>, Box<dyn Error + Send + Sync>> {
         match self {
             #[cfg(feature = "toml")]
-            FileFormat::Toml => toml::parse(uri, text),
+            ConsulFormat::Toml => toml::parse(uri, text),
 
             #[cfg(feature = "json")]
-            FileFormat::Json => json::parse(uri, text),
+            ConsulFormat::Json => json::parse(uri, text),
 
             #[cfg(feature = "yaml")]
-            FileFormat::Yaml => yaml::parse(uri, text),
+            ConsulFormat::Yaml => yaml::parse(uri, text),
 
             #[cfg(feature = "ini")]
-            FileFormat::Ini => ini::parse(uri, text),
+            ConsulFormat::Ini => ini::parse(uri, text),
 
             #[cfg(feature = "ron")]
-            FileFormat::Ron => ron::parse(uri, text),
+            ConsulFormat::Ron => ron::parse(uri, text),
 
             #[cfg(feature = "json5")]
-            FileFormat::Json5 => json5::parse(uri, text),
+            ConsulFormat::Json5 => json5::parse(uri, text),
 
             #[cfg(all(
                 not(feature = "toml"),
@@ -130,7 +133,7 @@ impl NacosFormat {
     }
 }
 
-impl Format for NacosFormat {
+impl Format for ConsulFormat {
     fn parse(
         &self,
         uri: Option<&String>,
@@ -140,7 +143,7 @@ impl Format for NacosFormat {
     }
 }
 
-impl NacosStoredFormat for NacosFormat {
+impl ConsulStoredFormat for ConsulFormat {
     fn file_extensions(&self) -> &'static [&'static str] {
         self.extensions()
     }

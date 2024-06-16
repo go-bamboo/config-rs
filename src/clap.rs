@@ -4,6 +4,7 @@ use crate::{
     config::Config,
     file::File,
     env::Environment,
+    nacos::Nacos,
 };
 
 
@@ -44,6 +45,22 @@ pub fn load_env<'de, T>(path: &str) -> Result<T>
     let bootstrap = settings.try_deserialize::<T>()?;
     Ok(bootstrap)
 }
+
+pub fn load_nacos<'de, T>(path: &str) -> Result<T>
+    where
+        T: serde::Deserialize<'de>,
+{
+    let settings = Config::builder()
+        .add_source(Nacos::with_name("APP"))
+        .build()
+        .unwrap();
+
+    // Print out our settings (as a HashMap)
+    let bootstrap = settings.try_deserialize::<T>()?;
+    Ok(bootstrap)
+}
+
+
 
 pub fn watch<'de, T>(bootstrap: &T) -> Result<()> {
     Ok(())

@@ -40,6 +40,7 @@ indexmap = { version = "2.2", features = ["serde"], optional = true }
 convert_case = { version = "0.6", optional = true }
 pathdiff = "0.2"
 clap = { version = "4.0.32", features = ["derive"] }
+url = { version = "2.5.1" }
 
 [dev-dependencies]
 serde_derive = "1.0"
