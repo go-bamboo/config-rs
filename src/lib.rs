@@ -32,6 +32,9 @@ mod path;
 mod ser;
 mod source;
 mod value;
+mod nacos;
+mod consul;
+mod clap;
 
 pub use crate::builder::ConfigBuilder;
 pub use crate::config::Config;
