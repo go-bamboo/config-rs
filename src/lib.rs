@@ -34,7 +34,7 @@ mod source;
 mod value;
 mod nacos;
 mod consul;
-mod clap;
+pub mod clap;
 
 pub use crate::builder::ConfigBuilder;
 pub use crate::config::Config;
@@ -48,6 +48,7 @@ pub use crate::map::Map;
 pub use crate::source::AsyncSource;
 pub use crate::source::Source;
 pub use crate::value::{Value, ValueKind};
+pub use crate::clap::Flag;
 
 #[allow(deprecated)]
 pub use crate::builder::AsyncConfigBuilder;
