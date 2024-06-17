@@ -1,4 +1,4 @@
-use clap::Parser;
+pub use clap::Parser;
 use crate::{
     error::Result,
     config::Config,
